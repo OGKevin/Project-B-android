@@ -2,11 +2,19 @@ package nl.paperchaser.triptracker;
 
 import android.location.Location;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
 
 // classes needed to initialize map
 import com.mapbox.android.core.location.LocationEngine;
@@ -30,8 +38,9 @@ import com.mapbox.mapboxsdk.location.modes.CameraMode;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback,
-    MapboxMap.OnMapClickListener, PermissionsListener {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, MapboxMap.OnMapClickListener, PermissionsListener {
+
+    private DrawerLayout drawerLayout;
 
     // variables for adding location layer
     private MapView mapView;
@@ -49,13 +58,50 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     long DEFAULT_MAX_WAIT_TIME = DEFAULT_INTERVAL_IN_MILLISECONDS * 5;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState){
+
         super.onCreate(savedInstanceState);
         Mapbox.getInstance(this, getString(R.string.access_token));
         setContentView(R.layout.activity_main);
+
         mapView = findViewById(R.id.navScreen);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setHomeAsUpIndicator(R.drawable.ic_navigation);
+
+        drawerLayout = findViewById(R.id.drawer_layout);
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        // set item as selected to persist highlight
+                        menuItem.setChecked(true);
+                        // close drawer when item is tapped
+                        drawerLayout.closeDrawers();
+
+                        // Add code here to update the UI based on the item selected
+                        // For example, swap UI fragments here
+
+                        return true;
+                    }
+                });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                drawerLayout.openDrawer(GravityCompat.START);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings({"MissingPermission"})
@@ -168,17 +214,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.options, menu);
-        return true;
-    }
-
-    @Override
     public boolean onMapClick(@NonNull LatLng point) {
         return false;
     }
-
 
     private static class LocationListeningCallback implements LocationEngineCallback<LocationEngineResult> {
 

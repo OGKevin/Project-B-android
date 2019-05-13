@@ -8,4 +8,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="ToolbarTheme"
+        parent="@style/ThemeOverlay.AppCompat.Light">
+        <item name="colorControlNormal">@color/white</item>
+        <item name="titleTextColor">@color/white</item>
+        <item name="colorBackgroundFloating">@color/colorPrimary</item>
+        <item name="android:elevation">0dp</item>
+    </style>
+
 </resources>

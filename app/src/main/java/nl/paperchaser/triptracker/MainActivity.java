@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setSupportActionBar(toolbar);
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
-        actionbar.setHomeAsUpIndicator(R.drawable.);
+        actionbar.setHomeAsUpIndicator(R.drawable.ic_navigation);
 
         drawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
